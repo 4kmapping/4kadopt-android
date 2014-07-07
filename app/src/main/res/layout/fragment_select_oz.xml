@@ -1,0 +1,85 @@
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    app:columnCount="2"
+    app:useDefaultMargins="true"
+    tools:context=".fragment.SelectOzFragment">
+
+    <TextView
+        android:text="You selected OZ:"
+        android:textSize="18sp"
+        android:textColor="#999"
+        app:layout_column="0"
+        app:layout_columnSpan="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="ABC-123"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#232276"
+        android:gravity="left"
+        app:layout_column="1"
+        app:layout_columnSpan="1"
+        app:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Select a target year"
+        android:textSize="18sp"
+        android:textColor="#999"
+        app:layout_column="0"
+        app:layout_columnSpan="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:hint="2014"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#999"
+        android:padding="5dp"
+        android:background="@drawable/input_field"
+        app:layout_column="1"
+        app:layout_columnSpan="1"
+        app:layout_gravity="fill_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        app:layout_column="0"
+        app:layout_columnSpan="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/change_oz"
+            android:text="CHANGE OZ"
+            android:textSize="14sp"
+            android:textColor="#fff"
+            android:background="@drawable/button_ne"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/signoff"
+            android:text="SELECT &amp; ADOPT"
+            android:textSize="14sp"
+            android:textColor="#fff"
+            android:background="@drawable/button_bl"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</android.support.v7.widget.GridLayout>

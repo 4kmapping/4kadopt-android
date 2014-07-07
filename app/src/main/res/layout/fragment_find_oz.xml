@@ -1,0 +1,76 @@
+<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    app:columnCount="2"
+    app:useDefaultMargins="true"
+    tools:context=".fragment.FindOzFragment">
+
+    <TextView
+        android:text="Type an Omega Zone world ID code"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#999"
+        app:layout_column="0"
+        app:layout_columnSpan="2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:hint="Contry Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#999"
+        android:background="@drawable/input_field"
+        android:padding="10dp"
+        app:layout_column="0"
+        app:layout_columnSpan="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:hint="Omega Zone ID"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#999"
+        android:background="@drawable/input_field"
+        android:padding="10dp"
+        app:layout_column="0"
+        app:layout_columnSpan="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        app:layout_column="0"
+        app:layout_columnSpan="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/find"
+            android:text="FIND"
+            android:textSize="14sp"
+            android:textColor="#fff"
+            android:background="@drawable/button_or"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/select"
+            android:text="SELECT"
+            android:textSize="14sp"
+            android:textColor="#fff"
+            android:background="@drawable/button_bl"
+            android:padding="8dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</android.support.v7.widget.GridLayout>

@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+    defaultConfig {
+        applicationId 'com.msk.adopt4k'
+        targetSdkVersion 19
+        minSdkVersion 10
+        versionCode 1
+        versionName '1.0'
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:19.+'
+    compile 'com.android.support:gridlayout-v7:19.+'
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.google.android.gms:play-services:+'
+    compile 'com.koushikdutta.ion:ion:1.2.4'
+}

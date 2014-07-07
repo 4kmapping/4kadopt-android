@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Map marker</title>
+
+    <style>
+        html, body
+        {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+
+
+        #map-canvas
+        {
+
+            width:100%;
+            height: 100%;
+
+            z-index:1;
+        }
+    </style>
+
+
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAuvnD4WuYWb50K27NmHhEgMvDyUXtbXWA&sensor=true"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script>
+
+
+        var map;
+
+        function initialize()
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+
+            var lat = vars[1].split("=")[1];
+            var lon = vars[2].split("=")[1];
+            var polygonParam = vars[3].split("=")[1];
+
+            var polygon = [];
+            var latlon = polygonParam.split("+");
+            for(i = 0; i+1 < latlon.length; i=i+2)
+            {
+                polygon.push(new google.maps.LatLng(latlon[i],latlon[i+1]));
+            }
+
+
+            var myLatLng = new google.maps.LatLng(lat, lon);
+            var mapOptions;
+
+            var mapOptions = {
+                zoom: 3,
+                center: myLatLng,
+                mapTypeId : google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            var polygonOverlay = new google.maps.Polygon({
+                paths: polygon
+                , strokeColor: '#ff0000'
+                , strokeOpacity: 0.8
+                , strokeWeight: 2
+                , fillColor: '#ff0000'
+                , fillOpacity: 0.35
+            });
+
+            polygonOverlay.setMap(map);
+        }
+
+	</script>
+	
+	
+  </head>
+  <body onload="initialize()">
+    <div id="map-canvas"></div>
+  </body>
+</html>
