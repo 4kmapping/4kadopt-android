@@ -9,7 +9,7 @@
     tools:context="com.msk.adopt4k.MainActivity">
 
     <TextView
-        android:text="Welcome!"
+        android:text="@string/welcome_main"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#999"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:text="Choose your action"
+        android:text="@string/main_msg_1"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#999"
@@ -44,7 +44,7 @@
 
     <TextView
         android:id="@+id/adopt"
-        android:text="ADOPT OZ"
+        android:text="@string/main_btn_1"
         android:textSize="18sp"
         android:textColor="#fff"
         android:background="@drawable/button_bl"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:text="VIEW YOUR OZ LIST"
+        android:text="@string/main_btn_2"
         android:textSize="18sp"
         android:textColor="#fff"
         android:background="@drawable/button_or"

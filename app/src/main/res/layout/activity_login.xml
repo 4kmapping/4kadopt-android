@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:text="Welcome to\n4K Adopt"
+        android:text="@string/welcome"
         android:textSize="42sp"
         android:textStyle="bold"
         android:textColor="#777"
@@ -31,14 +31,14 @@
             android:textSize="17sp"
             android:textColor="#999"
             android:layout_marginBottom="15dp"
-            android:text="Please Sign In" />
+            android:text="@string/signin" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             tools:context=".LoginActivity"
-            android:hint="Your email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:id="@+id/email"
             android:background="@drawable/input_field" />
@@ -49,14 +49,14 @@
             android:padding="10dp"
             tools:context=".LoginActivity"
             android:inputType="textPassword"
-            android:hint="Password"
+            android:hint="@string/pwd"
             android:id="@+id/pwd"
             android:background="@drawable/input_field" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign In"
+            android:text="@string/signinbtn"
             android:textSize="17sp"
             android:textColor="#fff"
             android:layout_marginTop="15dp"
