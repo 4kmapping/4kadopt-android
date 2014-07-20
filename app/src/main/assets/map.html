@@ -39,37 +39,75 @@
 
             var lat = vars[1].split("=")[1];
             var lon = vars[2].split("=")[1];
-            var polygonParam = vars[3].split("=")[1];
-
-            var polygon = [];
-            var latlon = polygonParam.split("+");
-            for(i = 0; i+1 < latlon.length; i=i+2)
-            {
-                polygon.push(new google.maps.LatLng(latlon[i],latlon[i+1]));
-            }
-
+            var zm = vars[3].split("=")[1];
 
             var myLatLng = new google.maps.LatLng(lat, lon);
             var mapOptions;
 
             var mapOptions = {
-                zoom: 8,
+                zoom: 11 - zm,
                 center: myLatLng,
                 mapTypeId : google.maps.MapTypeId.ROADMAP
             };
 
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-            var polygonOverlay = new google.maps.Polygon({
-                paths: polygon
-                , strokeColor: '#ff0000'
-                , strokeOpacity: 0.8
-                , strokeWeight: 2
-                , fillColor: '#ff0000'
-                , fillOpacity: 0.35
-            });
 
-            polygonOverlay.setMap(map);
+
+
+            var polygonParam = decodeURIComponent(vars[4].split("=")[1]);
+            var polygonArray;
+
+            if(polygonParam[3] == '[')
+            {
+                polygonArray = JSON.parse(polygonParam);
+            }
+
+            else
+            {
+                polygonArray = [];
+                polygonArray.push(JSON.parse(polygonParam));
+            }
+
+            var polygons = [];
+            for(i = 0; i < polygonArray.length; i++)
+            {
+                var pathArray = polygonArray[i];
+                var paths = [];
+
+                for(j = 0; j < pathArray.length; j++)
+                {
+                    var coordsArray = pathArray[j];
+                    var coords = [];
+
+                    for(k = 0; k < coordsArray.length; k++)
+                    {
+                        var lng = coordsArray[k][0];
+                        var lat = coordsArray[k][1];
+
+                        coords.push(new google.maps.LatLng(lat,lng));
+                    }
+
+                    paths.push(coords);
+                }
+
+                polygons.push(paths);
+            }
+
+
+            for(i = 0; i < polygons.length; i++)
+            {
+                var polygonOverlay = new google.maps.Polygon({
+                    paths: polygons[i]
+                    , strokeColor: '#ff0000'
+                    , strokeOpacity: 0.8
+                    , strokeWeight: 2
+                    , fillColor: '#ff0000'
+                    , fillOpacity: 0.35
+                });
+
+                polygonOverlay.setMap(map);
+            }
         }
 
 	</script>

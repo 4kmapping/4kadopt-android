@@ -10,6 +10,7 @@
     tools:context=".LoginActivity">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:text="@string/welcome"
@@ -19,53 +20,4 @@
         android:gravity="center"
         android:layout_weight="1"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textColor="#999"
-            android:layout_marginBottom="15dp"
-            android:text="@string/signin" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            tools:context=".LoginActivity"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:id="@+id/email"
-            android:background="@drawable/input_field" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:padding="10dp"
-            tools:context=".LoginActivity"
-            android:inputType="textPassword"
-            android:hint="@string/pwd"
-            android:id="@+id/pwd"
-            android:background="@drawable/input_field" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/signinbtn"
-            android:textSize="17sp"
-            android:textColor="#fff"
-            android:layout_marginTop="15dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:id="@+id/signin"
-            android:background="@drawable/button_or" />
-
-    </LinearLayout>
 </LinearLayout>

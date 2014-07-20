@@ -1,8 +1,11 @@
 package com.msk.adopt4k;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,20 +21,45 @@ public class MainActivity extends Activity {
         adopt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                Intent intent = new Intent(MainActivity.this, FindOzActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
-        TextView signOff = (TextView)findViewById(R.id.signoff);
-        signOff.setOnClickListener(new View.OnClickListener() {
+        TextView profile = (TextView)findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Quit");
+            alertDialogBuilder.setMessage("Do you want to Quit Application?");
+            alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    finish();
+                }
+            });
+            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            alertDialogBuilder.show();
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

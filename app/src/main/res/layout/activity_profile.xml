@@ -1,0 +1,110 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.msk.adopt4k.ProfileActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/profile"
+            android:textSize="35sp"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="#777"
+            android:id="@+id/textView" />
+
+        <LinearLayout
+            android:layout_marginBottom="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/b2m"
+                android:text="@string/back2menu"
+                android:textSize="14sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_ne"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/edit"
+                android:text="@string/edit"
+                android:textSize="14sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_or"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            android:text="@string/ur_name"
+            android:textSize="20sp"
+            android:textColor="#777"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/input_name"
+            android:background="@drawable/input_field"
+            android:textSize="20sp"
+            android:textColor="#0000ff"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/ur_email"
+            android:textSize="20sp"
+            android:textColor="#777"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/input_email"
+            android:background="@drawable/input_field"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"
+            android:textColor="#0000ff"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:text="@string/ur_apikey"
+            android:textSize="20sp"
+            android:textColor="#777"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/input_apikey"
+            android:background="@drawable/input_field"
+            android:textSize="20sp"
+            android:textColor="#0000ff"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

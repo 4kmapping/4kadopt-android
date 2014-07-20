@@ -7,15 +7,22 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
     <string name="welcome">Welcome to\n4K Adopt</string>
     <string name="signin">Please Sign In</string>
     <string name="email">Your email</string>
     <string name="pwd">Password</string>
     <string name="signinbtn">Sign In</string>
-    <string name="welcome_main">Welcome!</string>
+    <string name="welcome_main">Welcome to 4K Adopt</string>
     <string name="main_msg_1">Choose your action</string>
     <string name="main_btn_1">ADOPT OZ</string>
     <string name="main_btn_2">VIEW YOUR OZ LIST</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="profile">PROFILE</string>
+    <string name="back2menu">BACK TO MENU</string>
+    <string name="edit">EDIT</string>
+    <string name="ur_name">Your name(Base):</string>
+    <string name="ur_email">Your Email:</string>
+    <string name="ur_apikey">Your API Key</string>
+    <string name="title_activity_find_oz">FindOzActivity</string>
+
 </resources>

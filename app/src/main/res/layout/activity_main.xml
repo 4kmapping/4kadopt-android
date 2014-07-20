@@ -3,44 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:padding="40dp"
     app:columnCount="2"
     app:useDefaultMargins="true"
     tools:context="com.msk.adopt4k.MainActivity">
 
     <TextView
         android:text="@string/welcome_main"
-        android:textSize="18sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="#999"
+        android:gravity="center"
         app:layout_row="0"
-        app:layout_column="0"
-        app:layout_columnSpan="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:text="Hawaii Kona Base"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#232276"
-        app:layout_gravity="fill_horizontal"
-        android:gravity="right"
-        app:layout_row="0"
-        app:layout_column="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:text="@string/main_msg_1"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#999"
-        app:layout_row="1"
         app:layout_column="0"
         app:layout_columnSpan="2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/adopt"
@@ -70,8 +48,8 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/signoff"
-        android:text="SIGN OFF"
+        android:id="@+id/profile"
+        android:text="VIEW YOUR PROFILE"
         android:textSize="18sp"
         android:textColor="#fff"
         android:background="@drawable/button_ne"
