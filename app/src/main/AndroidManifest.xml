@@ -37,7 +37,8 @@
         </activity>
         <activity
             android:name=".FindOzActivity"
-            android:label="@string/title_activity_find_oz" >
+            android:label="@string/title_activity_find_oz"
+            android:windowSoftInputMode="adjustPan|stateUnchanged">
         </activity>
     </application>
 

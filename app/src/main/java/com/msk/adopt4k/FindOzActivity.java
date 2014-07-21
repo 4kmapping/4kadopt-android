@@ -6,17 +6,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.msk.adopt4k.utils.DBHelper;
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +21,6 @@ import java.net.URLEncoder;
 
 public class FindOzActivity extends Activity {
 
-    private TextView find;
     private EditText ozidInput;
     private WebView map;
 
@@ -36,8 +31,6 @@ public class FindOzActivity extends Activity {
 
         map = (WebView) findViewById(R.id.map);
         map.getSettings().setJavaScriptEnabled(true);
-
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         ozidInput = (EditText)findViewById(R.id.input_ozid);
         ozidInput.addTextChangedListener(new TextWatcher() {
@@ -59,11 +52,11 @@ public class FindOzActivity extends Activity {
                             s.insert(4*i-1, "-");
                     }
                 }
-
-
             }
         });
-        find = (TextView)findViewById(R.id.find);
+
+
+        TextView find = (TextView)findViewById(R.id.find);
         find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +78,8 @@ public class FindOzActivity extends Activity {
 
                 if(zoom < 5) {
                     zoom += 1;
+                } else if (zoom > 5) {
+                    zoom -= 1;
                 }
 
                 if(zoom < 0) {
@@ -105,7 +100,21 @@ public class FindOzActivity extends Activity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+            }
+        });
 
+        TextView cancel = (TextView)findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        TextView select = (TextView)findViewById(R.id.select);
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
