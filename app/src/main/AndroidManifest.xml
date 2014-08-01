@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.msk.adopt4k" >
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,17 +28,25 @@
             android:label="@string/title_activity_main" >
         </activity>
         <activity
-            android:name=".MapActivity"
-            android:label="@string/title_activity_map" >
-        </activity>
-        <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile" >
         </activity>
         <activity
             android:name=".FindOzActivity"
             android:label="@string/title_activity_find_oz"
-            android:windowSoftInputMode="adjustPan|stateUnchanged">
+            android:windowSoftInputMode="adjustPan|stateUnchanged" >
+        </activity>
+        <activity
+            android:name=".SelectOzActivity"
+            android:label="@string/title_activity_select_oz" >
+        </activity>
+        <activity
+            android:name=".AdoptOzActivity"
+            android:label="@string/title_activity_adopt_oz" >
+        </activity>
+        <activity
+            android:name=".HistoryActivity"
+            android:label="@string/title_activity_history" >
         </activity>
     </application>
 

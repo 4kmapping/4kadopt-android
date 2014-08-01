@@ -34,6 +34,15 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+        TextView history = (TextView)findViewById(R.id.history);
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

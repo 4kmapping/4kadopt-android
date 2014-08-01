@@ -24,5 +24,8 @@
     <string name="ur_email">Your Email:</string>
     <string name="ur_apikey">Your API Key</string>
     <string name="title_activity_find_oz">FindOzActivity</string>
+    <string name="title_activity_select_oz">SelectOzActivity</string>
+    <string name="title_activity_adopt_oz">AdoptOzActivity</string>
+    <string name="title_activity_history">HistoryActivity</string>
 
 </resources>

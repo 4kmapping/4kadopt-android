@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE \"geodata\" (\"Object_ID\" INTEGER, \"World_ID\" TEXT, \"Zone_name\" TEXT, \"Cnty_ID\" TEXT, \"Cnty_Name\" TEXT, \"Cen_x\" REAL, \"Cen_y\" REAL, \"Shape_Area\" REAL, \"Coords\" TEXT)");
         db.execSQL("CREATE TABLE \"userinfo\" (\"key\" TEXT, \"value\" TEXT)");
-        db.execSQL("CREATE TABLE \"adoptions\" (\"worldid\" TEXT, \"targetyear\" INTEGER, \"created\" DATETIME)");
+        db.execSQL("CREATE TABLE \"adoptions\" (\"worldid\" TEXT, \"targetyear\" INTEGER, \"created\" DATETIME DEFAULT_TIMESTAMP)");
 
         AssetManager manager = mContext.getAssets();
 
@@ -140,10 +141,43 @@ public class DBHelper extends SQLiteOpenHelper {
             geodata.addProperty(c.getColumnName(6), c.getDouble(6));//Cen_y
             geodata.addProperty(c.getColumnName(7), c.getDouble(7));//Shape_Area
             geodata.addProperty(c.getColumnName(8), c.getString(8));//Coords
+
+            return geodata;
         }
 
-        return geodata;
+        return null;
     }
 
+    public void insertAdoption(String worldID, int targetYear) {
+        db = getWritableDatabase();
+
+        db.execSQL("INSERT INTO adoptions(worldid, targetyear) VALUES('"+worldID+"',"+targetYear+")");
+    }
+
+    public void updateAdoption(String worldID, int targetYear) {
+        db = getWritableDatabase();
+        db.execSQL("UPDATE adoptions SET targetyear = "+targetYear+" WHERE worldid = '"+worldID+"'");
+    }
+
+    public void deleteAdoption(String worldID) {
+        db = getWritableDatabase();
+        db.execSQL("DELETE FROM adoptions WHERE worldid = '"+worldID+"'");
+    }
+
+    public JsonArray getAdoptions() {
+        db = getReadableDatabase();
+        JsonArray adoptions = new JsonArray();
+        Cursor c = db.rawQuery("SELECT * FROM adoptions", null);
+        while(c.moveToNext()) {
+            JsonObject adoption = new JsonObject();
+            adoption.addProperty(c.getColumnName(0), c.getString(0));
+            adoption.addProperty(c.getColumnName(1), c.getInt(0));
+            adoption.addProperty(c.getColumnName(2), c.getString(0));
+
+            adoptions.add(adoption);
+        }
+
+        return adoptions;
+    }
 } // class
 

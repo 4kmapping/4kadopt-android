@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/history"
         android:text="@string/main_btn_2"
         android:textSize="18sp"
         android:textColor="#fff"
