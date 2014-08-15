@@ -12,19 +12,20 @@ public class DialogManager {
         mContext = context;
     }
 
-    public void showOzAdopted() {
+    public void ownedWarning() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
         alertDialogBuilder.setTitle("Warning");
-        alertDialogBuilder.setMessage("Omega Zone already adopted");
+        alertDialogBuilder.setMessage("You have already adopted this Omega Zone.");
         alertDialogBuilder.setPositiveButton("OK, I'll choose another.", dismissListener);
         alertDialogBuilder.show();
     }
 
-    public void showOzLocked() {
+    public void takenWarning(DialogInterface.OnClickListener positiveListener) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
         alertDialogBuilder.setTitle("Warning");
-        alertDialogBuilder.setMessage("Omega Zone is locked, Maybe someone else could consider to adopt this...");
-        alertDialogBuilder.setPositiveButton("OK, I'll choose another.", dismissListener);
+        alertDialogBuilder.setMessage("This Omega Zone is adopted to another base, Do you want to adopt this OZ anyway?.");
+        alertDialogBuilder.setPositiveButton("Yes", positiveListener);
+        alertDialogBuilder.setNegativeButton("No, I'll choose another.", dismissListener);
         alertDialogBuilder.show();
     }
 
@@ -44,10 +45,43 @@ public class DialogManager {
         alertDialogBuilder.show();
     }
 
-    public void showBadWorldID() {
+    public void badOZIDWarning() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
         alertDialogBuilder.setTitle("Bad World ID");
-        alertDialogBuilder.setMessage("World ID that you had provided is not matches to Omega Zone Database");
+        alertDialogBuilder.setMessage("You have enterted wrong Omega Zone ID");
+        alertDialogBuilder.setPositiveButton("OK", dismissListener);
+        alertDialogBuilder.show();
+    }
+
+    public void deleteWarning(DialogInterface.OnClickListener positiveListener) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("Warning");
+        alertDialogBuilder.setMessage("Are you sure to delete?");
+        alertDialogBuilder.setPositiveButton("Yes", positiveListener);
+        alertDialogBuilder.setNegativeButton("No", dismissListener);
+        alertDialogBuilder.show();
+    }
+
+    public void selectTargetYearWarning() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("Warning");
+        alertDialogBuilder.setMessage("Please enter target year");
+        alertDialogBuilder.setPositiveButton("OK", dismissListener);
+        alertDialogBuilder.show();
+    }
+
+    public void apiKeyWarning() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("Warning");
+        alertDialogBuilder.setMessage("User Email or Api Key is invalid.");
+        alertDialogBuilder.setPositiveButton("OK", dismissListener);
+        alertDialogBuilder.show();
+    }
+
+    public void networkError() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setTitle("Network error");
+        alertDialogBuilder.setMessage("Please check you are accessible to internet or have valid user email and api key.");
         alertDialogBuilder.setPositiveButton("OK", dismissListener);
         alertDialogBuilder.show();
     }

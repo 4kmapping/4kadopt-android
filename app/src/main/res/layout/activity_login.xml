@@ -13,7 +13,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:text="@string/welcome"
+        android:text="Please Wait...\n\nLoading OZs..."
         android:textSize="42sp"
         android:textStyle="bold"
         android:textColor="#777"

@@ -2,11 +2,13 @@ package com.msk.adopt4k;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -22,9 +24,12 @@ import com.msk.adopt4k.utils.DialogManager;
 import com.msk.adopt4k.utils.GeodataHelper;
 import com.msk.adopt4k.utils.UserinfoHelper;
 
+import java.text.Format;
+
 
 public class FindOzActivity extends Activity {
 
+    private TextView info;
     private EditText ozidInput;
     private WebView map;
 
@@ -39,194 +44,193 @@ public class FindOzActivity extends Activity {
 
         map = (WebView) findViewById(R.id.map);
         map.getSettings().setJavaScriptEnabled(true);
+        map.loadUrl("file:///android_asset/map.html");
 
         ozidInput = (EditText)findViewById(R.id.input_ozid);
         ozidInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
+            int keyDel = 0;
             @Override
             public void afterTextChanged(Editable s) {
+
+                ozidInput.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                        if(i == KeyEvent.KEYCODE_DEL) {
+                            keyDel = 1;
+                        }
+
+                        return false;
+                    }
+                });
+
                 if( s.length() > 3 ) {
-                    for(int i = 1; i < s.length()/4+1; i++) {
-                        if(s.charAt(4*i-1) != '-')
-                            s.insert(4*i-1, "-");
+                    for(int i = 0; i < s.length(); i++) {
+                        if(s.charAt(i) == '-' && (i+1)%4 != 0) {
+                            s.replace(i, i+1, "");
+                        }
+
+                        if((i+1)%4 == 0 && s.charAt(i) != '-') {
+                            s.insert(i, "-");
+                        }
                     }
                 }
             }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {    //텍스트가 변경될때마다 실행
+
+            }
+
         });
 
+
+        info = (TextView) findViewById(R.id.info);
 
         final UserinfoHelper userinfoHelper = new UserinfoHelper(getApplicationContext());
         final ConnectionHelper connectionHelper = new ConnectionHelper(getApplicationContext());
         final GeodataHelper geodataHelper = new GeodataHelper(getApplicationContext());
 
+
+        /*
+                오메가존 찾기, 지도 위에 보여주기
+         */
         TextView find = (TextView)findViewById(R.id.find);
         find.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String worldID = ozidInput.getText().toString().toUpperCase();
 
+                if(worldID.length() > 0) {
+                    String mapParam = geodataHelper.getMapParam(worldID);
 
-                if (worldID.length() > 0 && connectionHelper.isConnected()) {
-                    String url = "http://4kadopt.org/api/adoptions/?wid="+worldID;
-
-                    Log.d("url", url);
-
-
-                    Ion.with(getApplicationContext())
-                            .load(url)
-                            .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    if(e != null) {
-                                        e.printStackTrace();
-                                    }
-
-                                    if(result.get("count").getAsInt() > 0) {
-                                        // lock인 경우
-                                        // 다이얼로그 출력
-                                        JsonArray results = result.get("results").getAsJsonArray();
-                                        JsonObject json = results.get(0).getAsJsonObject();
-                                        if(json.get("is_adopted").getAsBoolean()) {
-                                            // 이미 adopt됨
-                                            dialogManager.showOzAdopted();
-                                        } else {
-                                            // 누군가 보고있음
-                                            dialogManager.showOzLocked();
-                                        }
-                                    }
-
-                                    // find 에서는 lock이 아닌 경우를 딱히 신경 쓸 필요가 없음
-                                    Log.d("JsonResult", result.toString());
-                                }
-                            });
-
-                    // 버튼을 눌렀을 때 소프트 키보드를 감춘다
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(ozidInput.getWindowToken(), 0);
-                    map.invalidate();
-
-                    if(geodataHelper.getMapParam(worldID) != null) {
-
-                        map.loadUrl("file:///android_asset/map.html" + geodataHelper.getMapParam(worldID));
+                    if(mapParam != null) {
+                        map.loadUrl("file:///android_asset/map.html" + mapParam);
+                        info.setText(geodataHelper.getZoneName(worldID)+", "+geodataHelper.getCntyName(worldID));
                     } else {
-                        dialogManager.showBadWorldID();
+                        dialogManager.badOZIDWarning();
                     }
-
-                    // if
                 } else {
-                    if(worldID.length() == 0) {
-                        dialogManager.showRequiredField();
-                    } else {
-                        dialogManager.showNetworkWarning();
-                    }
+                    dialogManager.badOZIDWarning();
                 }
+
+                // 버튼을 눌렀을 때 소프트 키보드를 감춘다
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(ozidInput.getWindowToken(), 0);
+                map.invalidate();
+
             }
         });
 
+        /*
+                메인 화면으로 돌아기기
+         */
         TextView cancel = (TextView)findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(FindOzActivity.this, MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
 
+        /*
+                오메가존 선택하기
+         */
         TextView select = (TextView)findViewById(R.id.select);
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final String worldID = ozidInput.getText().toString().toUpperCase();
+                final int uid = userinfoHelper.getUID();
+
 
                 if(worldID.length() > 0 && connectionHelper.isConnected() && geodataHelper.getMapParam(worldID) != null) {
 
-                    String url = "http://4kadopt.org/api/adoptions/?wid="+worldID;
-
+                    String url = "http://4kadopt.org/api/ozstatus/?wid="+worldID+"&uid="+uid;
                     Log.d("url", url);
-
 
                     Ion.with(getApplicationContext())
                             .load(url)
                             .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
+                            .asString()
+                            .setCallback(new FutureCallback<String>() {
                                 @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    if(e != null) {
-                                        e.printStackTrace();
+                                public void onCompleted(Exception e, String result) {
+
+                                    // 다른 사람이 taken 한 경우
+                                    if(result.equals("taken")) {
+                                        dialogManager.takenWarning(new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(FindOzActivity.this, SelectOzActivity.class);
+
+                                                intent.putExtra("worldID", worldID.toUpperCase());
+                                                intent.putExtra("zoneName", geodataHelper.getZoneName(worldID.toUpperCase()));
+                                                intent.putExtra("cntyName", geodataHelper.getCntyName(worldID.toUpperCase()));
+
+                                                startActivity(intent);
+
+                                                dialogInterface.dismiss();
+                                                finish();
+                                            }
+                                        });
                                     }
 
-                                    if(result.get("count").getAsInt() > 0) {
-                                        // lock인 경우
-                                        // 다이얼로그 출력
-                                        JsonArray results = result.get("results").getAsJsonArray();
-                                        JsonObject json = results.get(0).getAsJsonObject();
-                                        if(json.get("is_adopted").getAsBoolean()) {
-                                            // 이미 adopt됨
-                                            dialogManager.showOzAdopted();
-                                        } else {
-                                            // 누군가 보고있음
-                                            dialogManager.showOzLocked();
-                                        }
-                                    } else {
-                                        // lock이 아닌 경우
-                                        // lock 걸고 다음 단계로
-                                        //lockOz(worldID);
-
-
-                                        JsonObject params = new JsonObject();
-                                        params.addProperty("worldid", worldID);
-                                        params.addProperty("targetyear", 0);
-                                        params.addProperty("is_adopted", false);
-
-                                        Ion.with(FindOzActivity.this)
-                                                .load("post", "http://4kadopt.org/api/adoptions/")
-                                                .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                                                .setJsonObjectBody(params)
-                                                .asJsonObject()
-                                                .setCallback(new FutureCallback<JsonObject>() {
-                                                    @Override
-                                                    public void onCompleted(Exception e, JsonObject result) {
-                                                        if(e != null) {
-                                                            e.printStackTrace();
-                                                        }
-
-                                                        if(result != null) {
-                                                            Log.d("post result", result.toString());
-                                                        }
-                                                        Intent i = new Intent(FindOzActivity.this, SelectOzActivity.class);
-                                                        i.putExtra("worldID", worldID.toUpperCase());
-                                                        i.putExtra("url", result.get("url").getAsString());
-                                                        startActivity(i);
-                                                        finish();
-                                                    }
-                                                });
+                                    // 사용자가 이미 owned 한 경우
+                                    else if(result.equals("owned")) {
+                                        dialogManager.ownedWarning();
                                     }
-                                    Log.d("JsonResult", result.toString());
-                                }
+
+                                    // 아무도 adopt 하지 않은 경우
+                                    else if(result.equals("none")) {
+                                        Intent intent = new Intent(FindOzActivity.this, SelectOzActivity.class);
+                                        intent.putExtra("worldID", worldID.toUpperCase());
+                                        intent.putExtra("zoneName", geodataHelper.getZoneName(worldID.toUpperCase()));
+                                        intent.putExtra("cntyName", geodataHelper.getCntyName(worldID.toUpperCase()));
+
+                                        startActivity(intent);
+                                        finish();
+                                    }
+
+                                    // 잘못된 ozid
+                                    else if(result.equals("wrongId")) {
+                                        dialogManager.badOZIDWarning();
+                                    }
+                                } // onCompleted
                             });
-                    // Ion
 
                     // if
                 } else {
+
+
                     if(worldID.length() == 0) {
+                        // ozid가 입력되지 않았을 때
                         dialogManager.showRequiredField();
                     } else if(geodataHelper.getMapParam(worldID) == null) {
-                        dialogManager.showBadWorldID();
+                        // ozid와 매치되는 데이터베이스의 worldid가 없을때, 잘못된 ozid
+                        dialogManager.badOZIDWarning();
                     } else {
+                        // 네트워크가 연결되지 않았을 경우
                         dialogManager.showNetworkWarning();
                     }
                 }
             }
         });
+        // 오메가존 선택하기 - 끝
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(FindOzActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 } // class

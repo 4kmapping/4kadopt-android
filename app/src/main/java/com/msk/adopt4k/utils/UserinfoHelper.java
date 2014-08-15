@@ -11,8 +11,22 @@ public class UserinfoHelper {
     public UserinfoHelper(Context context) {
         mContext = context;
     }
-
+/*
     public String getUsername() {
+        DBHelper dbHelper = new DBHelper(mContext);
+        JsonObject userInfo = dbHelper.getUserInfo();
+
+        return userInfo.get("name").getAsString();
+    }
+*/
+    public int getUID() {
+        DBHelper dbHelper = new DBHelper(mContext);
+        JsonObject userInfo = dbHelper.getUserInfo();
+
+        return userInfo.get("uid").getAsInt();
+    }
+
+    public String getUserName() {
         DBHelper dbHelper = new DBHelper(mContext);
         JsonObject userInfo = dbHelper.getUserInfo();
 

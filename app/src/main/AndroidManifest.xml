@@ -48,6 +48,14 @@
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history" >
         </activity>
+        <activity
+            android:name=".YearSelectActivity"
+            android:label="@string/title_activity_year_select" >
+        </activity>
+        <activity
+            android:name=".HistoryItemActivity"
+            android:label="@string/title_activity_history_item" >
+        </activity>
     </application>
 
 </manifest>

@@ -27,5 +27,7 @@
     <string name="title_activity_select_oz">SelectOzActivity</string>
     <string name="title_activity_adopt_oz">AdoptOzActivity</string>
     <string name="title_activity_history">HistoryActivity</string>
+    <string name="title_activity_year_select">YearSelectActivity</string>
+    <string name="title_activity_history_item">HistoryItemActivity</string>
 
 </resources>

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -17,43 +18,43 @@ import au.com.bytecode.opencsv.CSVReader;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static String DB_FILENAME = "4kgeodata.sqlite";
-
     private Context mContext;
     private SQLiteDatabase db;
 
     public DBHelper(Context context) {
-        super(context, DB_FILENAME, null, 1);
+        super(context, "4kgeodata.sqlite", null, 7);
         mContext = context;
     } // constructor
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE \"geodata\" (\"Object_ID\" INTEGER, \"World_ID\" TEXT, \"Zone_name\" TEXT, \"Cnty_ID\" TEXT, \"Cnty_Name\" TEXT, \"Cen_x\" REAL, \"Cen_y\" REAL, \"Shape_Area\" REAL, \"Coords\" TEXT)");
-        db.execSQL("CREATE TABLE \"userinfo\" (\"key\" TEXT, \"value\" TEXT)");
-        db.execSQL("CREATE TABLE \"adoptions\" (\"worldid\" TEXT, \"targetyear\" INTEGER, \"created\" DATETIME DEFAULT_TIMESTAMP)");
+        db.execSQL("CREATE TABLE geodata (World TEXT, World_ID TEXT, Zone_name TEXT, Population INTEGER, Cnty_ID TEXT, Cnty_Name TEXT, Cen_x REAL, Cen_y REAL, Shape_Area REAL, Coords TEXT)");
+        db.execSQL("CREATE TABLE userinfo (key TEXT, value TEXT)");
+        db.execSQL("CREATE TABLE adoptions (worldid TEXT, targetyear INTEGER, created DATETIME DEFAULT_TIMESTAMP, world TEXT, population INTEGER, zone_name TEXT, cnty_name TEXT, url TEXT)");
 
         AssetManager manager = mContext.getAssets();
 
         try {
-            CSVReader csvReader = new CSVReader(new InputStreamReader(manager.open("eastasia.csv")), '\t');
+            CSVReader csvReader = new CSVReader(new InputStreamReader(manager.open("ozfeatures.csv")), '\t');
 
             String[] line;
             while((line = csvReader.readNext()) != null) {
-                String objectID = line[0];
-                String worldID = line[1];
-                String zoneName = line[2];
-                String cntyID = line[3];
-                String cntyName = line[4];
-                String cenX = line[5];
-                String cenY = line[6];
-                String shapeArea = line[7];
-                String coords = line[8];
+                String world = line[0].trim();
+                String worldID = line[1].trim();
+                String zoneName = line[2].trim();
+                String population = line[3].trim();
+                String cntyID = line[4].trim();
+                String cntyName = line[5].trim();
+                String cenX = line[6].trim();
+                String cenY = line[7].trim();
+                String shapeArea = line[8].trim();
+                String coords = line[9].trim();
 
-                db.execSQL("INSERT INTO 'geodata' VALUES ("
-                        + objectID + ","
+                db.execSQL("INSERT INTO geodata VALUES ("
+                        + "\"" + world + "\","
                         + "\"" + worldID + "\","
                         + "\"" + zoneName + "\","
+                        + population + ","
                         + "\"" + cntyID + "\","
                         + "\"" + cntyName + "\","
                         + cenX + ","
@@ -70,11 +71,16 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO userinfo(key, value) VALUES('name', '')");
         db.execSQL("INSERT INTO userinfo(key, value) VALUES('email', '')");
         db.execSQL("INSERT INTO userinfo(key, value) VALUES('apikey', '')");
+        db.execSQL("INSERT INTO userinfo(key, value) VALUES('uid', '')");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE geodata");
+        db.execSQL("DROP TABLE userinfo");
+        db.execSQL("DROP TABLE adoptions");
 
+        onCreate(db);
     }
 
 
@@ -95,13 +101,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void insertUserInfo(String name, String email, String apiKey) {
+    public void insertUserInfo(String name, String email, String apiKey, int uid) {
 
         db = getWritableDatabase();
 
         db.execSQL("update userinfo set value='"+name+"' where key='name'");
         db.execSQL("update userinfo set value='"+email+"' where key='email'");
         db.execSQL("update userinfo set value='"+apiKey+"' where key='apikey'");
+        db.execSQL("update userinfo set value='"+uid+"' where key='uid'");
 
         // TODO login check process
 
@@ -124,7 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return userinfo;
     }
 
-    public JsonObject getGeoData(String worldID) {
+    public JsonObject   getGeoData(String worldID) {
         db = getReadableDatabase();
 
         JsonObject geodata = new JsonObject();
@@ -132,15 +139,16 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM geodata WHERE World_ID = \"" + worldID + "\"", null);
         if(c.moveToNext()) {
 
-            geodata.addProperty(c.getColumnName(0), c.getInt(0));//Object_ID
+            geodata.addProperty(c.getColumnName(0), c.getString(0));//World
             geodata.addProperty(c.getColumnName(1), c.getString(1));//World_ID
             geodata.addProperty(c.getColumnName(2), c.getString(2));//Zone_name
-            geodata.addProperty(c.getColumnName(3), c.getString(3));//Cnty_ID
-            geodata.addProperty(c.getColumnName(4), c.getString(4));//Cnty_name
-            geodata.addProperty(c.getColumnName(5), c.getDouble(5));//Cen_x
-            geodata.addProperty(c.getColumnName(6), c.getDouble(6));//Cen_y
-            geodata.addProperty(c.getColumnName(7), c.getDouble(7));//Shape_Area
-            geodata.addProperty(c.getColumnName(8), c.getString(8));//Coords
+            geodata.addProperty(c.getColumnName(3), c.getString(3));//Population
+            geodata.addProperty(c.getColumnName(4), c.getString(4));//Cnty_ID
+            geodata.addProperty(c.getColumnName(5), c.getString(5));//Cnty_name
+            geodata.addProperty(c.getColumnName(6), c.getDouble(6));//Cen_x
+            geodata.addProperty(c.getColumnName(7), c.getDouble(7));//Cen_y
+            geodata.addProperty(c.getColumnName(8), c.getDouble(8));//Shape_Area
+            geodata.addProperty(c.getColumnName(9), c.getString(9));//Coords
 
             return geodata;
         }
@@ -148,20 +156,54 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public void insertAdoption(String worldID, int targetYear) {
+    public void insertAdoption(String worldID, int targetYear, String url) {
+        GeodataHelper geodataHelper = new GeodataHelper(mContext);
+        String world = geodataHelper.getWorld(worldID);
+        int population = (int) geodataHelper.getPopulation(worldID);
+        String zoneName = geodataHelper.getZoneName(worldID);
+        String cntyName = geodataHelper.getCntyName(worldID);
+
         db = getWritableDatabase();
 
-        db.execSQL("INSERT INTO adoptions(worldid, targetyear) VALUES('"+worldID+"',"+targetYear+")");
+        db.execSQL("INSERT INTO adoptions(worldid, targetyear, world, population, zone_name, cnty_name, url) VALUES('"+worldID+"',"+targetYear+", '"+world+"', "+population+", '"+zoneName+"', '"+cntyName+"', '"+ url + "')");
     }
 
-    public void updateAdoption(String worldID, int targetYear) {
-        db = getWritableDatabase();
-        db.execSQL("UPDATE adoptions SET targetyear = "+targetYear+" WHERE worldid = '"+worldID+"'");
+    public int countAdoption() {
+        db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT COUNT(worldid) from adoptions", null);
+        if(c.moveToNext()) {
+            return c.getInt(0);
+        }
+
+        return 0;
     }
 
-    public void deleteAdoption(String worldID) {
+    public void updateAdoption(JsonArray adoptions) {
         db = getWritableDatabase();
-        db.execSQL("DELETE FROM adoptions WHERE worldid = '"+worldID+"'");
+        db.execSQL("DROP TABLE adoptions");
+        db.execSQL("CREATE TABLE adoptions (worldid TEXT, targetyear INTEGER, created DATETIME DEFAULT_TIMESTAMP, world TEXT, population INTEGER, zone_name TEXT, cnty_name TEXT, url TEXT)");
+
+        for(JsonElement adoption:adoptions) {
+            JsonObject item = (JsonObject) adoption;
+
+            String worldID = item.get("worldid").getAsString();
+            int targetYear = item.get("targetyear").getAsInt();
+            GeodataHelper geodataHelper = new GeodataHelper(mContext);
+            String world = geodataHelper.getWorld(worldID);
+            int population = (int) geodataHelper.getPopulation(worldID);
+            String zoneName = item.get("oz_zone_name").getAsString();
+            String cntyName = item.get("oz_country_name").getAsString();
+            String url = item.get("url").getAsString();
+
+
+            db.execSQL("INSERT INTO adoptions(worldid, targetyear, world, population, zone_name, cnty_name, url) VALUES('"+worldID+"',"+targetYear+", '"+world+"', "+population+", '"+zoneName+"', '"+cntyName+"', '"+ url + "')");
+        }
+
+    }
+
+    public void deleteAdoption(String ozid) {
+        db = getWritableDatabase();
+        db.execSQL("DELETE FROM adoptions WHERE worldid = '"+ozid+"'");
     }
 
     public JsonArray getAdoptions() {
@@ -171,8 +213,12 @@ public class DBHelper extends SQLiteOpenHelper {
         while(c.moveToNext()) {
             JsonObject adoption = new JsonObject();
             adoption.addProperty(c.getColumnName(0), c.getString(0));
-            adoption.addProperty(c.getColumnName(1), c.getInt(0));
-            adoption.addProperty(c.getColumnName(2), c.getString(0));
+            adoption.addProperty(c.getColumnName(1), c.getInt(1));
+            adoption.addProperty(c.getColumnName(3), c.getString(3));
+            adoption.addProperty(c.getColumnName(4), c.getInt(4));
+            adoption.addProperty(c.getColumnName(5), c.getString(5));
+            adoption.addProperty(c.getColumnName(6), c.getString(6));
+            adoption.addProperty(c.getColumnName(7), c.getString(7));
 
             adoptions.add(adoption);
         }
@@ -180,4 +226,5 @@ public class DBHelper extends SQLiteOpenHelper {
         return adoptions;
     }
 } // class
+
 

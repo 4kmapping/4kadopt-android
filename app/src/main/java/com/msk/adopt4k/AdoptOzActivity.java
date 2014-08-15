@@ -18,38 +18,58 @@ import com.msk.adopt4k.utils.UserinfoHelper;
 
 public class AdoptOzActivity extends Activity {
 
+    private DBHelper dbHelper;
+    private UserinfoHelper userinfoHelper;
+    private ConnectionHelper connectionHelper;
+    private DialogManager dialogManager;
+
+    private String worldID;
+    private String zoneName;
+    private String cntyName1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adopt_oz);
 
         Intent intent = getIntent();
-        final String worldID = intent.getStringExtra("worldID");
-        final String targetYear = intent.getStringExtra("targetYear");
-        final String url = intent.getStringExtra("url");
+        worldID = intent.getStringExtra("worldID");
+        final int targetYear = Integer.parseInt(intent.getStringExtra("targetYear"));
+        zoneName = intent.getStringExtra("zoneName");
+        cntyName1 = intent.getStringExtra("cntyName");
 
+        dbHelper = new DBHelper(getApplicationContext());
+        userinfoHelper = new UserinfoHelper(getApplicationContext());
+        connectionHelper = new ConnectionHelper(getApplicationContext());
+        dialogManager = new DialogManager(this);
+
+
+
+        // display name
         TextView username = (TextView)findViewById(R.id.username);
-        final DBHelper dbHelper = new DBHelper(getApplicationContext());
-        String txtUsername = dbHelper.getUserInfo().get("name").getAsString();
+        final String txtUsername = dbHelper.getUserInfo().get("name").getAsString();
         username.setText(txtUsername);
 
+        // world id
         TextView txtWorldID = (TextView) findViewById(R.id.world_id);
         txtWorldID.setText(worldID);
 
-        GeodataHelper geodataHelper = new GeodataHelper(this);
-        TextView cntyName = (TextView) findViewById(R.id.cnty_name);
-        cntyName.setText(geodataHelper.getCntyName(worldID));
+        // contry name
+        //GeodataHelper geodataHelper = new GeodataHelper(this);
+        final TextView cntyName = (TextView) findViewById(R.id.cnty_name);
+        cntyName.setText(cntyName1);
 
+        // target year
         TextView txtTargetYear = (TextView) findViewById(R.id.target_year);
-        txtTargetYear.setText(targetYear);
+        txtTargetYear.setText(""+targetYear);
+
+        // zone name
+        //final String zoneName = geodataHelper.getZoneName(worldID);
 
 
-        final UserinfoHelper userinfoHelper = new UserinfoHelper(getApplicationContext());
-        final ConnectionHelper connectionHelper = new ConnectionHelper(getApplicationContext());
-        final DialogManager dialogManager = new DialogManager(this);
 
         /*
-         * Yes, I will
+         *      Yes, I will
          */
         TextView select = (TextView) findViewById(R.id.select);
         select.setOnClickListener(new View.OnClickListener() {
@@ -60,24 +80,29 @@ public class AdoptOzActivity extends Activity {
 
                     JsonObject params = new JsonObject();
                     params.addProperty("is_adopted", true);
-                    Ion.with(getApplicationContext())
-                            .load("patch", url)
-                            .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                            .setJsonObjectBody(params)
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
+                    params.addProperty("worldid", worldID);
+                    params.addProperty("targetyear", targetYear);
+                    params.addProperty("oz_zone_name", zoneName);
+                    params.addProperty("oz_country_name", cntyName1);
+                    params.addProperty("user_display_name", txtUsername);
 
-                                    if (e == null) {
-                                        dbHelper.insertAdoption(worldID, Integer.parseInt(targetYear));
-                                        finish();
-                                    } else {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                    // Ion
+                    postAdoption(params, new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                            if(e == null && result.has("url")) {
+
+                                String url = result.get("url").getAsString();
+                                dbHelper.insertAdoption(worldID, targetYear, url);
+
+                                Intent i = new Intent(AdoptOzActivity.this, MainActivity.class);
+                                startActivity(i);
+                                finish();
+                            } else {
+                                dialogManager.networkError();
+                            }
+                        }
+                    });
                 } else {
                     dialogManager.showNetworkWarning();
                 }
@@ -93,30 +118,35 @@ public class AdoptOzActivity extends Activity {
             public void onClick(View v) {
 
                 if(connectionHelper.isConnected()) {
+
+
+
+
                     JsonObject params = new JsonObject();
                     params.addProperty("is_adopted", true);
-                    Ion.with(getApplicationContext())
-                            .load("patch", url)
-                            .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                            .setJsonObjectBody(params)
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
+                    params.addProperty("worldid", worldID);
+                    params.addProperty("targetyear", targetYear);
+                    params.addProperty("oz_zone_name", zoneName);
+                    params.addProperty("oz_country_name", cntyName.getText().toString());
+                    params.addProperty("user_display_name", txtUsername);
 
-                                    if (e == null) {
+                    postAdoption(params, new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
 
-                                        dbHelper.insertAdoption(worldID, Integer.parseInt(targetYear));
 
-                                        Intent i = new Intent(AdoptOzActivity.this, FindOzActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } else {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                    // Ion
+                            if(e == null && result.has("url")) {
+                                String url = result.get("url").getAsString();
+                                dbHelper.insertAdoption(worldID, targetYear, url);
+
+                                Intent i = new Intent(AdoptOzActivity.this, FindOzActivity.class);
+                                startActivity(i);
+                                finish();
+                            } else {
+                                dialogManager.networkError();
+                            }
+                        }
+                    });
                 } else {
                     dialogManager.showNetworkWarning();
                 }
@@ -131,32 +161,31 @@ public class AdoptOzActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if(connectionHelper.isConnected()) {
-
-                    Ion.with(getApplicationContext())
-                            .load("delete", url)
-                            .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
-                            .asJsonObject()
-                            .setCallback(new FutureCallback<JsonObject>() {
-                                @Override
-                                public void onCompleted(Exception e, JsonObject result) {
-                                    if (e == null) {
-                                        Intent i = new Intent(AdoptOzActivity.this, FindOzActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } else {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                    //Ion
-                } else {
-                    dialogManager.showNetworkWarning();
-                }
+                Intent i = new Intent(AdoptOzActivity.this, FindOzActivity.class);
+                startActivity(i);
+                finish();
             }
         });
 
     }
 
 
+    private void postAdoption(JsonObject params, FutureCallback<JsonObject> futureCallback) {
+        Ion.with(getApplicationContext())
+                .load("post", "http://4kadopt.org/api/adoptions/")
+                .addHeader("Authorization", "Basic " + userinfoHelper.getCredential())
+                .setJsonObjectBody(params)
+                .asJsonObject()
+                .setCallback(futureCallback);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(AdoptOzActivity.this, SelectOzActivity.class);
+        intent.putExtra("worldID",worldID);
+        intent.putExtra("zoneName", zoneName);
+        intent.putExtra("cntyName", cntyName1);
+        startActivity(intent);
+        finish();
+    }
 }

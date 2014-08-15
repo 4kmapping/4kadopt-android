@@ -16,12 +16,36 @@ public class GeodataHelper {
         mContext = context;
     }
 
+    public String getWorld(String worldID) {
+        DBHelper dbHelper = new DBHelper(mContext);
+
+        JsonObject geodata = dbHelper.getGeoData(worldID.toUpperCase());
+
+        return geodata.get("World").getAsString();
+    }
+
+    public double getPopulation(String worldID) {
+        DBHelper dbHelper = new DBHelper(mContext);
+
+        JsonObject geodata = dbHelper.getGeoData(worldID.toUpperCase());
+
+        return geodata.get("Population").getAsDouble();
+    }
+
     public String getCntyName(String worldID) {
         DBHelper dbHelper = new DBHelper(mContext);
 
         JsonObject geodata = dbHelper.getGeoData(worldID.toUpperCase());
 
         return geodata.get("Cnty_Name").getAsString();
+    }
+
+    public String getZoneName(String worldID) {
+        DBHelper dbHelper = new DBHelper(mContext);
+
+        JsonObject geodata = dbHelper.getGeoData(worldID.toUpperCase());
+
+        return geodata.get("Zone_name").getAsString();
     }
 
     public String getMapParam(String worldID) {
